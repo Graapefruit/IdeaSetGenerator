@@ -1,5 +1,25 @@
 from Stuff.Modifier import Modifier
+from Stuff.IdeaModifier import IdeaModifier
 import tkinter as tk
+from tkinter import filedialog as fd
+from os.path import exists
+
+modifiers = []
+modifierNameToData = dict()
+ideas = [[], [], [], [], [], [], [], [], []]
+
+def loadModifiers(filePath):
+    if exists(filePath):
+        f = open(filePath, 'r')
+        for line in f:
+            name, baseValue, description, effectType, versionAdded = line.split(";")
+            modifiers.append(name)
+            modifierNameToData[name] = Modifier(name, baseValue, description, effectType, versionAdded)
+        for idea in ideas:
+            for ideaModifier in idea:
+                ideaModifier.modifierField["values"]=modifiers
+    else:
+        tk.messagebox.showinfo("File Not Found", "The following file does not exist: {}".format(filePath))
 
 def populateIdeaSetText():
     ideaSetText = """{} = {{\n
@@ -13,8 +33,6 @@ def populateIdeaSetText():
                 \t\ttag = {}\n
                 \t}}\n\n"""
 
-def 
-
 def createTagPanel(window):
     panel = tk.PanedWindow(window, orient=tk.VERTICAL)
     panel.pack(side=tk.TOP)
@@ -26,41 +44,25 @@ def createTagPanel(window):
     randomIdeasButton.pack(side=tk.LEFT)
     return panel
 
-def createIdeaSection(window, title):
+def createIdeaSection(window, title, ideaNum):
     panel = tk.PanedWindow(window, orient=tk.VERTICAL)
     panel.pack(side=tk.TOP)
-    modifiersList = []
     modifiersPanel = tk.PanedWindow(window, orient=tk.VERTICAL)
     modifiersPanel.pack(side=tk.TOP)
     ideaLabel = tk.Label(panel, text=title)
     ideaLabel.pack(side=tk.LEFT)
-    addIdeaButton = tk.Button(panel, text="+", command=(lambda : addModifier(modifiersPanel, modifiersList)))
+    createNewIdeaModifierLambda = (lambda : ideas[ideaNum].append(IdeaModifier(modifiersPanel, modifiers)))
+    addIdeaButton = tk.Button(panel, text="+", command=createNewIdeaModifierLambda)
     addIdeaButton.pack(side=tk.LEFT)
-    removeIdeaButton = tk.Button(panel, text="-", command=(lambda : removeModifier(modifiersList)))
+    removeIdeaButton = tk.Button(panel, text="-", command=(lambda : removeModifier(ideaNum)))
     removeIdeaButton.pack(side=tk.LEFT)
-    return modifiersList
 
-def addModifier(panel, modifiersList):
-    modifierPanel = tk.PanedWindow(panel, orient=tk.VERTICAL)
-    modifierPanel.pack(side=tk.TOP)
-    #modifierImage = tk.Image(modifierPanel)
-    #modifierImage.pack(tk.LEFT)
-    modifier = tk.Entry(modifierPanel, width=24)
-    modifier.pack(side=tk.LEFT)
-    modifiersList.append(modifierPanel)
-
-def removeModifier(modifiersList):
-    if len(modifiersList) > 0:
-        modifier = modifiersList.pop()
+def removeModifier(ideaNum):
+    if len(ideas[ideaNum]) > 0:
+        modifier = ideas[ideaNum].pop()
         modifier.destroy()
 
 if __name__ == "__main__":
-    f = open("modifiers.txt", 'r')
-    modifiers = dict()
-    for line in f:
-        name, baseValue, description, effectType, versionAdded = line.split(";")
-        modifiers["name"] = Modifier(name, baseValue, description, effectType, versionAdded)
-    
     window = tk.Tk()
     window.geometry("300x600")
     window.title("Idea Set Geneator")
@@ -70,18 +72,19 @@ if __name__ == "__main__":
     fileMenu.add_command(label="Save")
     fileMenu.add_separator()
     fileMenu.add_command(label="Set Destination File")
-    fileMenu.add_command(label="Load Modifiers")
+    fileMenu.add_command(label="Load Modifiers", command=(lambda : loadModifiers(fd.askopenfilename())))
     fileMenu.add_command(label="Load Modifier Icons")
     menubar.add_cascade(label="File", menu=fileMenu)
+    window.config(menu=menubar)
 
     tagPanel = createTagPanel(window)
-    traditions = createIdeaSection(window, "Tradition(s):")
-    idea1 = createIdeaSection(window, "Idea One:")
-    idea2 = createIdeaSection(window, "Idea Two:")
-    idea3 = createIdeaSection(window, "Idea Three:")
-    idea4 = createIdeaSection(window, "Idea Four:")
-    idea5 = createIdeaSection(window, "Idea Five:")
-    idea6 = createIdeaSection(window, "Idea Six:")
-    idea7 = createIdeaSection(window, "Idea Seven:")
-    ambition = createIdeaSection(window, "Ambition(s):")
+    traditions = createIdeaSection(window, "Tradition(s):", 0)
+    idea1 = createIdeaSection(window, "Idea One:", 1)
+    idea2 = createIdeaSection(window, "Idea Two:", 2)
+    idea3 = createIdeaSection(window, "Idea Three:", 3)
+    idea4 = createIdeaSection(window, "Idea Four:", 4)
+    idea5 = createIdeaSection(window, "Idea Five:", 5)
+    idea6 = createIdeaSection(window, "Idea Six:", 6)
+    idea7 = createIdeaSection(window, "Idea Seven:", 7)
+    ambition = createIdeaSection(window, "Ambition(s):", 8)
     window.mainloop()
