@@ -7,7 +7,7 @@ SETTINGS_FILE = "Settings.txt"
 
 class FileConfig:
     def __init__(self):
-        self.listeners = []
+        self.ideaModifiers = []
         self.modifierFile = ""
         self.questionMarkIcon = ""
         self.modifierIconDirectory = ""
@@ -39,19 +39,21 @@ class FileConfig:
         if exists(openedFolder):
             self.modifierFile = openedFolder
             modifiers = self.readModifiers()
-            for listener in self.listeners:
-                listener.updateModifiers(modifiers)
+            for ideaModifier in self.ideaModifiers:
+                ideaModifier.updateModifiers(modifiers)
             self.updateSettingsFile()
         else:
             print("Could not find the following file for the modifiers: {}".format(self.modifierFile))
+
+    def loadSaveFileLocation
 
     def loadNewModifierIconsDirectory(self):
         openedFile = fd.askdirectory()
         if exists(openedFile):
             self.modifierIconDirectory = openedFile
             self.updateSettingsFile()
-            for listener in self.listeners:
-                listener.updateModifierIcon()
+            for ideaModifier in self.ideaModifiers:
+                ideaModifier.updateModifierIcon()
         else:
             print("Could not find the following file for the modifiers: {}".format(self.modifierFile))
 
@@ -64,3 +66,5 @@ class FileConfig:
                 modifiers[name] = Modifier(name, baseValue, description, effectType, versionAdded)
             f.close()
         return modifiers
+
+    def save(self):

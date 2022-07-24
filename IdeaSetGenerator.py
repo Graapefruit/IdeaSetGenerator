@@ -17,7 +17,7 @@ class IdeaSetGenerator:
 
         menubar = tk.Menu(self.window)
         fileMenu = tk.Menu(menubar, tearoff=0)
-        fileMenu.add_command(label="Save", command=populateIdeaSetText)
+        fileMenu.add_command(label="Save", command=self.fileConfig.save())
         fileMenu.add_separator()
         fileMenu.add_command(label="Set Destination File")
         fileMenu.add_command(label="Load Modifiers", command=self.fileConfig.loadNewModifiersFile)

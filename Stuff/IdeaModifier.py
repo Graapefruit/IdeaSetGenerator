@@ -10,7 +10,7 @@ imageDimension = 35
 class IdeaModifier:
     def __init__(self, parentPanel, fileConfig):
         self.fileConfig = fileConfig
-        self.fileConfig.listeners.append(self)
+        self.fileConfig.ideaModifiers.append(self)
         self.modifiers = fileConfig.readModifiers()
         self.modifierPanel = tk.PanedWindow(parentPanel, orient=tk.VERTICAL)
         self.modifierPanel.pack(side=tk.TOP)
@@ -51,5 +51,4 @@ class IdeaModifier:
         if comboBoxText in self.modifiers:
             self.modifierAmount.delete(0, tk.END)
             self.modifierAmount.insert(0, self.modifiers[comboBoxText].baseValue)
-            # TODO: change the default vaue if blank
         self.updateModifierIcon()
