@@ -1,0 +1,3 @@
+modifiers = /home/graham/Documents/EU4Stuff/IdeaSetGenerator/modifiers.txt
+questionMark = 
+modifierIcons = /home/graham/.steam/steam/steamapps/common/Europa Universalis IV/gfx/interface/ideas_EU4
