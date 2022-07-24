@@ -17,7 +17,7 @@ def loadModifiers(filePath):
             modifierNameToData[name] = Modifier(name, baseValue, description, effectType, versionAdded)
         for idea in ideas:
             for ideaModifier in idea:
-                ideaModifier.modifierField["values"]=modifiers
+                ideaModifier.updateModifiers(modifiers)
     else:
         tk.messagebox.showinfo("File Not Found", "The following file does not exist: {}".format(filePath))
 
@@ -44,7 +44,7 @@ def createTagPanel(window):
     randomIdeasButton.pack(side=tk.LEFT)
     return panel
 
-def createIdeaSection(window, title, ideaNum):
+def createIdeaSection(window, title, ideaNum, startingIdeas):
     panel = tk.PanedWindow(window, orient=tk.VERTICAL)
     panel.pack(side=tk.TOP)
     modifiersPanel = tk.PanedWindow(window, orient=tk.VERTICAL)
@@ -56,6 +56,8 @@ def createIdeaSection(window, title, ideaNum):
     addIdeaButton.pack(side=tk.LEFT)
     removeIdeaButton = tk.Button(panel, text="-", command=(lambda : removeModifier(ideaNum)))
     removeIdeaButton.pack(side=tk.LEFT)
+    for i in range(0, startingIdeas):
+        ideas[ideaNum].append(IdeaModifier(modifiersPanel, modifiers))
 
 def removeModifier(ideaNum):
     if len(ideas[ideaNum]) > 0:
@@ -64,7 +66,7 @@ def removeModifier(ideaNum):
 
 if __name__ == "__main__":
     window = tk.Tk()
-    window.geometry("300x600")
+    window.geometry("300x825")
     window.title("Idea Set Geneator")
 
     menubar = tk.Menu(window)
@@ -78,13 +80,13 @@ if __name__ == "__main__":
     window.config(menu=menubar)
 
     tagPanel = createTagPanel(window)
-    traditions = createIdeaSection(window, "Tradition(s):", 0)
-    idea1 = createIdeaSection(window, "Idea One:", 1)
-    idea2 = createIdeaSection(window, "Idea Two:", 2)
-    idea3 = createIdeaSection(window, "Idea Three:", 3)
-    idea4 = createIdeaSection(window, "Idea Four:", 4)
-    idea5 = createIdeaSection(window, "Idea Five:", 5)
-    idea6 = createIdeaSection(window, "Idea Six:", 6)
-    idea7 = createIdeaSection(window, "Idea Seven:", 7)
-    ambition = createIdeaSection(window, "Ambition(s):", 8)
+    traditions = createIdeaSection(window, "Tradition(s):", ideaNum=0, startingIdeas=2)
+    idea1 = createIdeaSection(window, "Idea One:", ideaNum=1, startingIdeas=1)
+    idea2 = createIdeaSection(window, "Idea Two:", ideaNum=2, startingIdeas=1)
+    idea3 = createIdeaSection(window, "Idea Three:", ideaNum=3, startingIdeas=1)
+    idea4 = createIdeaSection(window, "Idea Four:", ideaNum=4, startingIdeas=1)
+    idea5 = createIdeaSection(window, "Idea Five:", ideaNum=5, startingIdeas=1)
+    idea6 = createIdeaSection(window, "Idea Six:", ideaNum=6, startingIdeas=1)
+    idea7 = createIdeaSection(window, "Idea Seven:", ideaNum=7, startingIdeas=1)
+    ambition = createIdeaSection(window, "Ambition(s):", ideaNum=8, startingIdeas=1)
     window.mainloop()
