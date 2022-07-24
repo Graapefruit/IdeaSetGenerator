@@ -3,9 +3,11 @@ from Stuff.IdeaModifier import IdeaModifier
 import tkinter as tk
 from tkinter import filedialog as fd
 from os.path import exists
+from os import getcwd
 
-modifiers = []
-modifierNameToData = dict()
+DEFAULT_MODIFIERS_FILE = "modifiers.txt"
+
+modifiers = dict()
 ideas = [[], [], [], [], [], [], [], [], []]
 
 def loadModifiers(filePath):
@@ -13,13 +15,12 @@ def loadModifiers(filePath):
         f = open(filePath, 'r')
         for line in f:
             name, baseValue, description, effectType, versionAdded = line.split(";")
-            modifiers.append(name)
-            modifierNameToData[name] = Modifier(name, baseValue, description, effectType, versionAdded)
+            modifiers[name] = Modifier(name, baseValue, description, effectType, versionAdded)
         for idea in ideas:
             for ideaModifier in idea:
                 ideaModifier.updateModifiers(modifiers)
     else:
-        tk.messagebox.showinfo("File Not Found", "The following file does not exist: {}".format(filePath))
+        tk.messagebox.showinfo("File Not Found", "The following file canot be found: {}".format(filePath))
 
 def populateIdeaSetText():
     ideaSetText = """{} = {{\n
@@ -66,8 +67,10 @@ def removeModifier(ideaNum):
 
 if __name__ == "__main__":
     window = tk.Tk()
-    window.geometry("300x825")
+    window.geometry("400x825")
     window.title("Idea Set Geneator")
+
+    loadModifiers("{}/{}".format(getcwd(), DEFAULT_MODIFIERS_FILE))
 
     menubar = tk.Menu(window)
     fileMenu = tk.Menu(menubar, tearoff=0)
